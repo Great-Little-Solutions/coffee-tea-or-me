@@ -24,3 +24,11 @@ Restart your terminal, then run `python --version`. You should see Python 3.6.3 
 Create a project directory, e.g. `coffee-tea-or-me`.
 
 In the project directory, run `pip install python-telegram-bot`.
+
+In the project root folder, create a file called `config.json` with the following content:
+
+```
+{
+    "bot_token": "<your telegram bot token here>"
+}
+```
