@@ -1,5 +1,6 @@
 import json
 import logging
+import itertools
 
 from telegram import InlineKeyboardButton
 from telegram import InlineKeyboardMarkup
@@ -21,12 +22,60 @@ def not_a_group(update):
 
     return False
 
+
+# Read drinks.json so that keyboard can be populated later
+with open('drinks.json') as data_file:
+    drinks_data = json.load(data_file)
+
+
+# Generate all drink combinations
+def generate_drink_combis():
+    drinks = drinks_data['0']
+    combinations = []
+
+    for i in range(1, 5):
+        iterables = [drinks]
+
+        for j in range(1, i + 1):
+            iterables.append(drinks_data[str(j)])
+
+        for combination in itertools.product(*iterables):
+            combinations.append('-'.join(combination))
+
+    return combinations
+
+
 # Populate the keyboard with drinks and options
 def keyboard(message):
-    keyboard = [[InlineKeyboardButton('Kopi', callback_data='%s:%s:Kopi' % (str(message.chat.id), str(message.message_id))),
-                 InlineKeyboardButton('Teh', callback_data='%s:%s:Teh' % (str(message.chat.id), str(message.message_id)))],
-                [InlineKeyboardButton('Kopi-O', callback_data='%s:%s:Kopi-O' % (str(message.chat.id), str(message.message_id))),
-                 InlineKeyboardButton('Teh-O', callback_data='%s:%s:Teh-O' % (str(message.chat.id), str(message.message_id)))]]
+    combinations = generate_drink_combis()
+
+    keyboard = [[InlineKeyboardButton('Kopi',
+                                      callback_data='%s:%s:Kopi' % (
+                                          message.chat.id,
+                                          message.message_id)),
+                 InlineKeyboardButton('Teh',
+                                      callback_data='%s:%s:Teh' % (
+                                          message.chat.id,
+                                          message.message_id))]]
+
+    for i in range(0, len(combinations), 2):
+        left_item = combinations[i]
+        keyboard_item = [InlineKeyboardButton(left_item,
+                         callback_data='%s:%s:%s' % (message.chat.id,
+                                                     message.message_id,
+                                                     left_item))]
+
+        right_item = []
+        if i + 1 < len(combinations):
+            right_item = combinations[i + 1]
+            keyboard_item.append(InlineKeyboardButton(right_item,
+                                 callback_data='%s:%s:%s' % (
+                                     message.chat.id,
+                                     message.message_id,
+                                     right_item)))
+
+        keyboard.append(keyboard_item)
+
     return keyboard
 
 
@@ -74,6 +123,7 @@ def button(bot, update):
     bot.edit_message_text(text="You selected option: %s" % drink,
                           chat_id=query.message.chat.id,
                           message_id=query.message.message_id)
+
 
 # Add a user to coffee run subscribers for a group chat
 def add_to_subscribers(chat_id, user_id):
