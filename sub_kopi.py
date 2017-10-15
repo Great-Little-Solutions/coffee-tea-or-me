@@ -89,9 +89,15 @@ def send_notification_to_subscribers(bot, update, message):
     with open('subscribers/%s.txt' % update.message.chat.id, 'r') as data_file:
         for line in data_file:
             bot.send_message(chat_id=line.rstrip(),
-                             text='%s started the coffee run, please order:'
+                             text='%s volunteered to be the kopi boy/girl, order now or else...'
                              % update.message.from_user.first_name,
                              reply_markup=keyboard_reply_markup(message))
+
+
+# Create orders file, to be used when someone starts a coffee run
+def create_orders_file(chat_id, message_id, opening_message):
+    with open('orders/%s-%s.txt' % (chat_id, message_id), 'a+') as data_file:
+        data_file.write('%s\n\n' % opening_message)
 
 
 # Handler for /start command
@@ -99,7 +105,9 @@ def start(bot, update):
     if not_a_group(update):
         return
 
-    message = update.message.reply_text('%s started the coffee run, please order via the notification sent to you privately. Use /sub to subscribe to future notifications. Current orders:' % update.message.from_user.first_name)
+    message = update.message.reply_text('%s volunteered to be the kopi boy/girl, please order via the notification sent to you privately. Use /sub to subscribe to future notifications. Order now or else...' % update.message.from_user.first_name)
+    create_orders_file(message.chat.id, message.message_id, message.text)
+
     send_notification_to_subscribers(bot, update, message)
 
 
@@ -171,7 +179,7 @@ def sub(bot, update):
     add_to_subscribers(update.message.chat.id,
                        update.message.from_user.id)
 
-    update.message.reply_text('%s has subscribed to coffee runs. You will receive a notification from yours truly when a coffee run starts in group: %s. Click here @%s and press START so that I can send you notifications. Delete that chat and you will never hear from me again.' % (update.message.from_user.first_name, update.message.chat.title, bot.get_me().username))
+    update.message.reply_text('%s has subscribed to coffee runs. You will receive a notification from yours truly when a coffee run starts in group: %s.\n\nClick here @%s and press START so that I can send you notifications. Delete that chat and you will never hear from me again \U0001F608' % (update.message.from_user.first_name, update.message.chat.title, bot.get_me().username))
 
 
 # Handler for /unsub comand
@@ -182,7 +190,7 @@ def unsub(bot, update):
     remove_from_subscribers(update.message.chat.id,
                             update.message.from_user.id)
 
-    update.message.reply_text('%s has unsubscribed from coffee runs. You will no longer receive notifications from yours truly when a coffee run starts in group: %s' % (update.message.from_user.first_name, update.message.chat.title))
+    update.message.reply_text('%s has unsubscribed from coffee runs \U0001F612 One less drink to buy when kopi run starts in group: %s' % (update.message.from_user.first_name, update.message.chat.title))
 
 
 # Handler for /help command
