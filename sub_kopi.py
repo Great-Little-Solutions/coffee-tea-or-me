@@ -86,7 +86,7 @@ def keyboard_reply_markup(message):
 
 # Send coffee run notification to subscribers for a group
 def send_notification_to_subscribers(bot, update, message):
-    with open('%s.txt' % update.message.chat.id, 'r') as data_file:
+    with open('subscribers/%s.txt' % update.message.chat.id, 'r') as data_file:
         for line in data_file:
             bot.send_message(chat_id=line.rstrip(),
                              text='%s started the coffee run, please order:'
@@ -103,6 +103,22 @@ def start(bot, update):
     send_notification_to_subscribers(bot, update, message)
 
 
+# Write to orders file
+def write_to_orders_file(chat_id, message_id, user, drink):
+    with open('orders/%s-%s.txt' % (chat_id, message_id), 'w+') as data_file:
+        data_file.write('%s - %s\n' % (user, drink))
+
+
+# Update orders message in group
+def update_orders_in_group(bot, chat_id, message_id):
+    with open('orders/%s-%s.txt' % (chat_id, message_id), 'r') as data_file:
+        orders = data_file.read()
+
+    bot.edit_message_text(text=orders,
+                          chat_id=chat_id,
+                          message_id=message_id)
+
+
 # Handler for button click callbacks
 def button(bot, update):
     query = update.callback_query
@@ -111,13 +127,12 @@ def button(bot, update):
     message_id_for_editing = callback_data[1]
     drink = callback_data[2]
 
-    # Update orders in group
-    bot.edit_message_text(text="%s\n%s selected option: %s"
-                          % (query.message.text,
-                             query.from_user.first_name,
-                             drink),
-                          chat_id=chat_id_for_editing,
-                          message_id=message_id_for_editing)
+    write_to_orders_file(chat_id_for_editing,
+                         message_id_for_editing,
+                         query.from_user.first_name,
+                         drink)
+
+    update_orders_in_group(bot, chat_id_for_editing, message_id_for_editing)
 
     # Update private chat
     bot.edit_message_text(text="You selected option: %s" % drink,
@@ -127,7 +142,7 @@ def button(bot, update):
 
 # Add a user to coffee run subscribers for a group chat
 def add_to_subscribers(chat_id, user_id):
-    with open('%s.txt' % chat_id, 'r+') as data_file:
+    with open('subscribers/%s.txt' % chat_id, 'w+') as data_file:
         for line in data_file:
             if str(user_id) in line.rstrip():
                 break
@@ -137,11 +152,11 @@ def add_to_subscribers(chat_id, user_id):
 
 # Remove a user from coffee run subscribers from a group chat
 def remove_from_subscribers(chat_id, user_id):
-    file = open('%s.txt' % chat_id, 'r')
+    file = open('subscribers/%s.txt' % chat_id, 'r')
     lines = file.readlines()
     file.close()
 
-    file = open('%s.txt' % chat_id, 'w')
+    file = open('subscribers/%s.txt' % chat_id, 'w')
     for line in lines:
         if line.rstrip() != str(user_id):
             file.write(line)
