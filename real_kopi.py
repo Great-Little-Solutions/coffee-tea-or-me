@@ -29,7 +29,8 @@ def keyboard_reply_markup():
 
 # Handler for /start command
 def start(bot, update):
-    update.message.reply_text('%s started the coffee run, please order:' % update.message.from_user.first_name,
+    update.message.reply_text('%s started the coffee run, please order:'
+                              % update.message.from_user.first_name,
                               reply_markup=keyboard_reply_markup())
 
 
@@ -37,15 +38,78 @@ def start(bot, update):
 def button(bot, update):
     query = update.callback_query
 
-    bot.edit_message_text(text="%s\n%s selected option: %s" % (query.message.text, query.from_user.first_name, query.data),
+    bot.edit_message_text(text="%s\n%s selected option: %s"
+                          % (query.message.text,
+                             query.from_user.first_name,
+                             query.data),
                           chat_id=query.message.chat_id,
                           message_id=query.message.message_id,
                           reply_markup=keyboard_reply_markup())
 
 
+# Add a user to coffee run subscribers for a group chat
+def add_to_subscribers(chat_id, user_id):
+    with open('%s.txt' % chat_id, 'r+') as data_file:
+        for line in data_file:
+            if str(user_id) in line.rstrip():
+                break
+        else:  # user_id not found in current subscribers, we are at eof
+            data_file.write(str(user_id) + '\n')
+
+
+# Remove a user from coffee run subscribers from a group chat
+def remove_from_subscribers(chat_id, user_id):
+    file = open('%s.txt' % chat_id, 'r')
+    lines = file.readlines()
+    file.close()
+
+    file = open('%s.txt' % chat_id, 'w')
+    for line in lines:
+        if line.rstrip() != str(user_id):
+            file.write(line)
+    file.close()
+
+
+# Handler for /sub command
+def sub(bot, update):
+    if update.message.chat.type == 'private':
+        update.message.reply_text('You can only do this in groups.')
+        return
+
+    add_to_subscribers(update.message.chat.id,
+                       update.message.from_user.id)
+
+    update.message.reply_text("""%s has subscribed to coffee runs.
+You will receive a notification from
+yours truly when a coffee run starts in
+group: %s""" % (
+        update.message.from_user.first_name,
+        update.message.chat.title))
+
+
+# Handler for /unsub comand
+def unsub(bot, update):
+    if update.message.chat.type == 'private':
+        update.message.reply_text('You can only do this in groups.')
+        return
+
+    remove_from_subscribers(update.message.chat.id,
+                            update.message.from_user.id)
+
+    update.message.reply_text("""%s has unsubscribed from coffee runs.
+You will no longer receive notifications from
+yours truly when a coffee run starts in
+group: %s""" % (
+        update.message.from_user.first_name,
+        update.message.chat.title))
+
+
 # Handler for /help command
 def help(bot, update):
-    update.message.reply_text("Use /start to test this bot.")
+    update.message.reply_text("""/start to start a coffee run
+                              \n/sub in group chats to subscribe
+                              to coffee run notifications
+                              \n/unsub to do the opposite of /sub""")
 
 
 # Handler to log errors
@@ -61,6 +125,8 @@ updater = Updater(token=config_data['bot_token'])
 
 updater.dispatcher.add_handler(CommandHandler('start', start))
 updater.dispatcher.add_handler(CallbackQueryHandler(button))
+updater.dispatcher.add_handler(CommandHandler('sub', sub))
+updater.dispatcher.add_handler(CommandHandler('unsub', unsub))
 updater.dispatcher.add_handler(CommandHandler('help', help))
 updater.dispatcher.add_error_handler(error)
 
