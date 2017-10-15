@@ -105,7 +105,7 @@ def start(bot, update):
 
 # Write to orders file
 def write_to_orders_file(chat_id, message_id, user, drink):
-    with open('orders/%s-%s.txt' % (chat_id, message_id), 'w+') as data_file:
+    with open('orders/%s-%s.txt' % (chat_id, message_id), 'a+') as data_file:
         data_file.write('%s - %s\n' % (user, drink))
 
 
@@ -142,7 +142,7 @@ def button(bot, update):
 
 # Add a user to coffee run subscribers for a group chat
 def add_to_subscribers(chat_id, user_id):
-    with open('subscribers/%s.txt' % chat_id, 'w+') as data_file:
+    with open('subscribers/%s.txt' % chat_id, 'a+') as data_file:
         for line in data_file:
             if str(user_id) in line.rstrip():
                 break
