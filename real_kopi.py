@@ -57,12 +57,16 @@ def error(bot, update, error):
 with open('config.json') as data_file:
     config_data = json.load(data_file)
 
+# Updater receives updates from Telegram server and deliver to dispatcher
 updater = Updater(token=config_data['bot_token'])
 
-updater.dispatcher.add_handler(CommandHandler('start', start))
-updater.dispatcher.add_handler(CallbackQueryHandler(button))
-updater.dispatcher.add_handler(CommandHandler('help', help))
-updater.dispatcher.add_error_handler(error)
+# Dispatcher handles the updates, and dispatches them to the handlers
+dispatcher = updater.dispatcher
+
+dispatcher.add_handler(CommandHandler('start', start))
+dispatcher.add_handler(CallbackQueryHandler(button))
+dispatcher.add_handler(CommandHandler('help', help))
+dispatcher.add_error_handler(error)
 
 updater.start_polling()
 
