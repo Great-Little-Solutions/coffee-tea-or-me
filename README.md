@@ -9,7 +9,7 @@ To install pyenv, run the following commands in terminal:
 2. `brew install pyenv`
 
 
-After installation, add the following at the bottom of your profile (~/.bash_profile or ~/.zshenv).
+After installation, add the following at the bottom of your profile (~/.bash_profile or ~/.zshrc).
 
 ```
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
