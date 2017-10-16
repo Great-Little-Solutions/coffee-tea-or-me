@@ -2,6 +2,11 @@
 A Telegram Bot for coffee runs.
 
 ## Setting up your development environment
+Install Homebrew by pasting the following in your terminal:
+```
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+
 To install pyenv, run the following commands in terminal:
 
 1. `brew update`
