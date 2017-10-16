@@ -32,3 +32,4 @@ In the project root folder, create a file called `config.json` with the followin
     "bot_token": "<your telegram bot token here>"
 }
 ```
+Do not worry about the telegram bot token, I will go through how you can get it during the chapter day.
