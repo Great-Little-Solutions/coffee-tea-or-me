@@ -1,6 +1,12 @@
 # Coffee, Tea, or Me?
 A Telegram Bot for coffee runs.
 
+`simple_kopi.py`: simple demo to learn how to work with python-telegram-bot library
+
+`kopi.py`: a simple kopi orders bot
+
+`advanced_kopi.py`: a full-fledged kopi orders bot. Future enhancements will focus solely on this file.
+
 ## Setting up your development environment
 Install Homebrew by pasting the following in your terminal:
 ```
