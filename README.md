@@ -6,6 +6,15 @@ A Telegram Bot for coffee runs.
 `kopi.py`: a simple kopi orders bot
 
 `advanced_kopi.py`: a full-fledged kopi orders bot. Future enhancements will focus solely on this file.
+> Pending enhancements:
+>
+* Change current long-polling to API web hooks
+* Specify location for coffee run
+* Sum up orders for each type of drink
+* Cancel coffee run
+* End coffee run
+* Delete orders text file when coffee run is cancelled/ended
+* Possible to handle payments?
 
 ## Setting up your development environment
 Install Homebrew by pasting the following in your terminal:
