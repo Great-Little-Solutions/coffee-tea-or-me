@@ -4,3 +4,5 @@ coffee_tea_or_me/orders/*
 coffee_tea_or_me/subscribers/*
 __pycache__
 *.pyc
+firebase_config.json
+firebase_service_account.json
