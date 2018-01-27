@@ -1,5 +1,5 @@
-from handlers.keyboard_handler import KeyboardHandler
-from helpers.helper import Helper
+from coffee_tea_or_me.handlers.keyboard_handler import KeyboardHandler
+from coffee_tea_or_me.helpers.helper import Helper
 
 class NotificationHandler:
 

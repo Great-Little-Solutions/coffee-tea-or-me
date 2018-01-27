@@ -1,16 +1,18 @@
+import sys
+sys.path.append('../')
+
 import os
 import json
 import logging
 
-from handlers.notification_handler import NotificationHandler
-from handlers.subscription_handler import SubscriptionHandler
-from handlers.order_handler import OrderHandler
-from helpers.helper import Helper
+from coffee_tea_or_me.handlers.notification_handler import NotificationHandler
+from coffee_tea_or_me.handlers.subscription_handler import SubscriptionHandler
+from coffee_tea_or_me.handlers.order_handler import OrderHandler
+from coffee_tea_or_me.helpers.helper import Helper
 
 from telegram.ext import Updater
 from telegram.ext import CommandHandler
 from telegram.ext import CallbackQueryHandler
-
 
 # Enable logging to help with debugging
 logging.basicConfig(level=logging.DEBUG,

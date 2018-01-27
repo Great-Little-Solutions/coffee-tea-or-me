@@ -1,5 +1,6 @@
+.DS_Store
 config.json
-orders/*
-subscribers/*
+coffee_tea_or_me/orders/*
+coffee_tea_or_me/subscribers/*
 __pycache__
 *.pyc

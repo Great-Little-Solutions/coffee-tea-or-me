@@ -1,4 +1,4 @@
-from helpers.helper import Helper
+from coffee_tea_or_me.helpers.helper import Helper
 
 class SubscriptionHandler:
 
