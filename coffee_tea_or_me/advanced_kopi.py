@@ -24,7 +24,8 @@ def start(bot, update):
     if Helper.not_a_group(update) or Helper.not_authorised(update):
         return
 
-    message = update.message.reply_text('%s volunteered to be the kopi boy/girl, please order via the notification sent to you privately. Use /sub to subscribe to future notifications. Order now or else...' % update.message.from_user.first_name)
+    # message = update.message.reply_text('%s volunteered to be the kopi boy/girl, please order via the notification sent to you privately. Use /sub to subscribe to future notifications. Order now or else...' % update.message.from_user.first_name)
+    message = update.message.reply_text("Stanly's Coffee is now open! Please order via the notification sent to you privately. Use /sub to subscribe to future notifications.")
     OrderHandler.create_orders_file(message.chat.id, message.message_id, message.text)
 
     NotificationHandler.send_notification_to_subscribers(bot, update, message)
@@ -73,7 +74,7 @@ def sub(bot, update):
     SubscriptionHandler.add_to_subscribers(update.message.chat.id,
                        update.message.from_user.id)
 
-    update.message.reply_text('%s has subscribed to coffee runs. You will receive a notification from yours truly when a coffee run starts in group: %s.\n\nClick here @%s and press START so that I can send you notifications. Delete that chat and you will never hear from me again \U0001F608' % (update.message.from_user.first_name, update.message.chat.title, bot.get_me().username))
+    update.message.reply_text('%s has subscribed to coffee runs. You will receive a notification from yours truly when a coffee run starts in group: %s.\n\nClick here @%s and press "Send Message" > "START" so that I can send you notifications. Delete that chat and you will never hear from me again \U0001F608' % (update.message.from_user.first_name, update.message.chat.title, bot.get_me().username))
 
 
 # Handler for /unsub comand
