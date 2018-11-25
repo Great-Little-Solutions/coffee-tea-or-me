@@ -29,6 +29,9 @@ class KeyboardHandler:
 
         return combinations
 
+    def generate_drink_combis_stanly(self):
+        return ['Latte', 'Mint Latte', 'Matcha Latte', 'Long Black', 'Espresso', 'Hot Chocolate']
+
 
     # Populate the keyboard with drinks and options
     def keyboard(self, message):
@@ -64,6 +67,33 @@ class KeyboardHandler:
         return keyboard
 
 
+    def keyboard_stanly(self, message):
+        combinations = self.generate_drink_combis_stanly()
+
+        keyboard = []
+
+        for i in range(0, len(combinations), 2):
+            left_item = combinations[i]
+            keyboard_item = [InlineKeyboardButton(left_item,
+                             callback_data='%s:%s:%s' % (message.chat.id,
+                                                         message.message_id,
+                                                         left_item))]
+
+            right_item = []
+            if i + 1 < len(combinations):
+                right_item = combinations[i + 1]
+                keyboard_item.append(InlineKeyboardButton(right_item,
+                                     callback_data='%s:%s:%s' % (
+                                         message.chat.id,
+                                         message.message_id,
+                                         right_item)))
+
+            keyboard.append(keyboard_item)
+
+        return keyboard
+
+
     # Generate the inline keyboard markup for keyboard
     def keyboard_reply_markup(self, message):
-        return InlineKeyboardMarkup(self.keyboard(message))
+        # return InlineKeyboardMarkup(self.keyboard(message))
+        return InlineKeyboardMarkup(self.keyboard_stanly(message))
