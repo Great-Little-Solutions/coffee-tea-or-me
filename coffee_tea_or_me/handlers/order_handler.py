@@ -12,8 +12,15 @@ class OrderHandler:
 
     # Write to orders file
     def write_to_orders_file(chat_id, message_id, user, drink):
+        order_count = 0
+        for line in open(Helper.file_path('orders/%s-%s.txt' % (chat_id, message_id)), 'r'):
+            if ' - ' in line:
+                order_count += 1
+
+        order_count += 1
+
         with open(Helper.file_path('orders/%s-%s.txt' % (chat_id, message_id)), 'a+') as data_file:
-            data_file.write('%s - %s\n' % (user, drink))
+            data_file.write('%d. %s - %s\n' % (order_count, user, drink))
 
 
     # Update orders message in group
