@@ -5,12 +5,13 @@ class SubscriptionHandler:
 
     # Add a user to coffee run subscribers for a group chat
     def add_to_subscribers(chat_id, user_id):
-        with open(Helper.file_path('subscribers/%s.txt' % chat_id), 'a+') as data_file:
+        with open(Helper.file_path('subscribers/%s.txt' % chat_id), 'r') as data_file:
             for line in data_file:
                 if str(user_id) in line.rstrip():
-                    break
-            else:  # user_id not found in current subscribers, we are at eof
-                data_file.write(str(user_id) + '\n')
+                    return
+
+        with open(Helper.file_path('subscribers/%s.txt' % chat_id), 'a+') as data_file:
+            data_file.write(str(user_id) + '\n')
 
 
     # Remove a user from coffee run subscribers from a group chat
