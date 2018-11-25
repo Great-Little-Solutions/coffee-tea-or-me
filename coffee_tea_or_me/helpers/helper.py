@@ -16,6 +16,12 @@ class Helper:
         return False
 
 
+    def not_authorised(update):
+        authorised_people = ['shermanelee', 'ngjhalex', 'stanlylau']
+
+        return update.message.from_user.username not in authorised_people
+
+
     def file_path(file):
         print('---------------------------')
         print(file)

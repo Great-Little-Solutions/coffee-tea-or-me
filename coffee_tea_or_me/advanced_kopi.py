@@ -21,7 +21,7 @@ logging.basicConfig(level=logging.DEBUG,
 
 # Handler for /start command
 def start(bot, update):
-    if Helper.not_a_group(update):
+    if Helper.not_a_group(update) or Helper.not_authorised(update):
         return
 
     message = update.message.reply_text('%s volunteered to be the kopi boy/girl, please order via the notification sent to you privately. Use /sub to subscribe to future notifications. Order now or else...' % update.message.from_user.first_name)
@@ -88,7 +88,7 @@ def unsub(bot, update):
 
 
 def done(bot, update, args):
-    if Helper.not_a_group(update):
+    if Helper.not_a_group(update) or Helper.not_authorised(update):
         return
 
     final_order_message = OrderHandler.update_done_order(update.message.chat.id, int(args[0]))
