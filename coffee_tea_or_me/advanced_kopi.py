@@ -92,8 +92,7 @@ def done(bot, update, args):
     if Helper.not_a_group(update) or Helper.not_authorised(update):
         return
 
-    final_order_message = OrderHandler.update_done_order(update.message.chat.id, int(args[0]))
-    update.message.reply_text(final_order_message)
+    OrderHandler.update_done_order(bot, update.message.chat.id, int(args[0]))
 
 
 # Read config file to get telegram bot token later

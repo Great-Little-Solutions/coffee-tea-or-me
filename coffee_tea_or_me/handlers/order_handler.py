@@ -1,5 +1,6 @@
 import glob
 import os
+import re
 
 from coffee_tea_or_me.helpers.helper import Helper
 
@@ -36,7 +37,7 @@ class OrderHandler:
                               message_id=message_id)
 
 
-    def update_done_order(chat_id, item_num):
+    def update_done_order(bot, chat_id, item_num):
         list_of_orders_in_chat = glob.glob(Helper.file_path('orders/%s-*.txt' % (chat_id)))
         latest_order_file = max(list_of_orders_in_chat, key=os.path.getctime)
 
@@ -53,4 +54,8 @@ class OrderHandler:
         with open(latest_order_file, 'w') as data_file:
             data_file.write(final_order_message)
 
-        return final_order_message
+        message_id = re.search('(\d+)\.txt', latest_order_file)[1]
+
+        bot.edit_message_text(text=final_order_message,
+                              chat_id=chat_id,
+                              message_id=message_id)
