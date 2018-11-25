@@ -87,6 +87,14 @@ def unsub(bot, update):
     update.message.reply_text('%s has unsubscribed from coffee runs \U0001F612 One less drink to buy when kopi run starts in group: %s' % (update.message.from_user.first_name, update.message.chat.title))
 
 
+def done(bot, update, args):
+    if Helper.not_a_group(update):
+        return
+
+    final_order_message = OrderHandler.update_done_order(update.message.chat.id, int(args[0]))
+    update.message.reply_text(final_order_message)
+
+
 # Read config file to get telegram bot token later
 with open('config.json') as data_file:
     config_data = json.load(data_file)
@@ -98,6 +106,7 @@ updater.dispatcher.add_handler(CallbackQueryHandler(button))
 updater.dispatcher.add_handler(CommandHandler('sub', sub))
 updater.dispatcher.add_handler(CommandHandler('unsub', unsub))
 updater.dispatcher.add_handler(CommandHandler('help', help))
+updater.dispatcher.add_handler(CommandHandler('done', done, pass_args=True))
 updater.dispatcher.add_error_handler(error)
 
 updater.start_polling()

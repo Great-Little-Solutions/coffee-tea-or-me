@@ -1,3 +1,6 @@
+import glob
+import os
+
 from coffee_tea_or_me.helpers.helper import Helper
 
 
@@ -31,3 +34,23 @@ class OrderHandler:
         bot.edit_message_text(text=orders,
                               chat_id=chat_id,
                               message_id=message_id)
+
+
+    def update_done_order(chat_id, item_num):
+        list_of_orders_in_chat = glob.glob(Helper.file_path('orders/%s-*.txt' % (chat_id)))
+        latest_order_file = max(list_of_orders_in_chat, key=os.path.getctime)
+
+        row_to_find = str(item_num) + '.'
+
+        final_order_message = ''
+        with open(latest_order_file, 'r') as data_file:
+            for line in data_file:
+                if row_to_find in line:
+                    line = line.rstrip() + ' [done]\n'
+
+                final_order_message = final_order_message + line
+
+        with open(latest_order_file, 'w') as data_file:
+            data_file.write(final_order_message)
+
+        return final_order_message
