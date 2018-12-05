@@ -7,12 +7,10 @@ from coffee_tea_or_me.helpers.helper import Helper
 
 class OrderHandler:
 
-
     # Create orders file, to be used when someone starts a coffee run
     def create_orders_file(chat_id, message_id, opening_message):
         with open(Helper.file_path('orders/%s-%s.txt' % (chat_id, message_id)), 'a+') as data_file:
             data_file.write('%s\n\n' % opening_message)
-
 
     # Write to orders file
     def write_to_orders_file(chat_id, message_id, user, drink):
@@ -26,7 +24,6 @@ class OrderHandler:
         with open(Helper.file_path('orders/%s-%s.txt' % (chat_id, message_id)), 'a+') as data_file:
             data_file.write('%d. %s - %s\n' % (order_count, user, drink))
 
-
     # Update orders message in group
     def update_orders_in_group(bot, chat_id, message_id):
         with open(Helper.file_path('orders/%s-%s.txt' % (chat_id, message_id)), 'r') as data_file:
@@ -35,7 +32,6 @@ class OrderHandler:
         bot.edit_message_text(text=orders,
                               chat_id=chat_id,
                               message_id=message_id)
-
 
     def update_done_order(bot, chat_id, item_num):
         list_of_orders_in_chat = glob.glob(Helper.file_path('orders/%s-*.txt' % (chat_id)))
@@ -46,7 +42,7 @@ class OrderHandler:
         final_order_message = ''
         with open(latest_order_file, 'r') as data_file:
             for line in data_file:
-                if row_to_find in line:
+                if line.startswith(row_to_find):
                     line = line.rstrip() + ' [done]\n'
 
                 final_order_message = final_order_message + line

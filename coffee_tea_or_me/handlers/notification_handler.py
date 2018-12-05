@@ -8,8 +8,8 @@ from coffee_tea_or_me.helpers.helper import Helper
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-class NotificationHandler:
 
+class NotificationHandler:
 
     # Send coffee run notification to subscribers for a group
     def send_notification_to_subscribers(bot, update, message):
