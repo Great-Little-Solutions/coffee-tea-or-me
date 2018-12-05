@@ -92,7 +92,11 @@ def done(bot, update, args):
     if Helper.not_a_group(update) or Helper.not_authorised(update):
         return
 
-    OrderHandler.update_done_order(bot, update.message.chat.id, int(args[0]))
+    for arg in args:
+        try:
+            OrderHandler.update_done_order(bot, update.message.chat.id, int(arg))
+        except Exception as error:
+            logging.warning('Unable to mark item "%s" as done, error: "%s"' % (arg, error))
 
 
 # Read config file to get telegram bot token later
